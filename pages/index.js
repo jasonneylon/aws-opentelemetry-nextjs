@@ -115,3 +115,10 @@ export default function Home() {
     </>
   );
 }
+
+export async function getServerSideProps() {
+  console.log("getServerSideProps");
+  return {
+    props: {},
+  };
+}
