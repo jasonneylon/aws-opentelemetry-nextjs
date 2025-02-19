@@ -30,7 +30,17 @@ export default $config({
       ],
       server: {
         layers: ["arn:aws:lambda:eu-west-1:615299751070:layer:AWSOpenTelemetryDistroJs:6"]
-      }
+      },
+      // This didn't work and I had to set it manually
+      // transform: {
+      //   server: (args, opts) => {
+      //     console.dir(args);
+      //     args.tracingConfig = {
+      //       mode: "Active"
+      //     };
+      //   },
+      // },
+      warm: false
     });
   },
 });
