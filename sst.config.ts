@@ -15,6 +15,22 @@ export default $config({
     };
   },
   async run() {
-    new sst.aws.Nextjs("MyWeb");
+    new sst.aws.Nextjs("MyWeb", {
+      environment: {
+        AWS_LAMBDA_EXEC_WRAPPER: "/opt/otel-instrument"
+      },
+      permissions: [
+        {
+          actions: [
+            "xray:PutTraceSegments",
+            "xray:PutTelemetryRecords"
+          ],
+          resources: ["*"]
+        }
+      ],
+      server: {
+        layers: ["arn:aws:lambda:eu-west-1:615299751070:layer:AWSOpenTelemetryDistroJs:6"]
+      }
+    });
   },
 });
