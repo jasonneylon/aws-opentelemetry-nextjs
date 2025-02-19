@@ -1,8 +1,10 @@
 /// <reference path="./.sst/platform/config.d.ts" />
 
+
 export default $config({
   app(input) {
     return {
+
       name: "aws-nextjs",
       providers: {
         aws: {
@@ -15,10 +17,15 @@ export default $config({
     };
   },
   async run() {
+    const bucket = new sst.aws.Bucket("MyBucket", {
+      access: "private"
+    });
     new sst.aws.Nextjs("MyWeb", {
       environment: {
-        AWS_LAMBDA_EXEC_WRAPPER: "/opt/otel-instrument"
+        AWS_LAMBDA_EXEC_WRAPPER: "/opt/otel-instrument",
+        OPENTELEMETRY_COLLECTOR_CONFIG_FILE: $interpolate`s3://${bucket.name}.s3.eu-west-1.amazonaws.com/collector.yaml`
       },
+      link: [bucket],
       permissions: [
         {
           actions: [
