@@ -127,6 +127,8 @@ const streamToString = (stream) => new Promise((resolve, reject) => {
 
 export async function getServerSideProps() {
   console.log("getServerSideProps");
+  console.log("environment");
+  console.dir(process.env);
   console.log(Resource.MyBucket.name);
 
   const input = {
