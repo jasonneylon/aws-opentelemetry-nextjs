@@ -2,6 +2,8 @@ import Head from "next/head";
 import Image from "next/image";
 import { Geist, Geist_Mono } from "next/font/google";
 import styles from "@/styles/Home.module.css";
+import { Resource } from "sst";
+import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3"; // ES Modules import
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -116,8 +118,28 @@ export default function Home() {
   );
 }
 
+const streamToString = (stream) => new Promise((resolve, reject) => {
+  const chunks = [];
+  stream.on('data', (chunk) => chunks.push(chunk));
+  stream.on('error', reject);
+  stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+});
+
 export async function getServerSideProps() {
   console.log("getServerSideProps");
+  console.log(Resource.MyBucket.name);
+
+  const input = {
+    "Bucket": Resource.MyBucket.name,
+    "Key": "collector.yaml"
+  };
+  const command = new GetObjectCommand(input);
+  const response = await new S3Client({}).send(command);
+  // read the body of the response and log it to the console
+  const { Body } = response;
+
+  console.log(await streamToString(Body));
+
   return {
     props: {},
   };
