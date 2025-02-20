@@ -24,7 +24,8 @@ export default $config({
       environment: {
         AWS_LAMBDA_EXEC_WRAPPER: "/opt/otel-instrument",
         OPENTELEMETRY_COLLECTOR_CONFIG_FILE: $interpolate`s3://${bucket.name}.s3.eu-west-1.amazonaws.com/collector.yaml`,
-          OPENTELEMETRY_COLLECTOR_CONFIG_URI: $interpolate`s3://${bucket.name}.s3.eu-west-1.amazonaws.com/collector.yaml`
+          OPENTELEMETRY_COLLECTOR_CONFIG_URI: $interpolate`s3://${bucket.name}.s3.eu-west-1.amazonaws.com/collector.yaml`,
+          OPENTELEMETRY_EXTENSION_LOG_LEVEL: "debug"
       },
       link: [bucket],
       permissions: [
