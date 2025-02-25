@@ -5,6 +5,8 @@ import styles from "@/styles/Home.module.css";
 import { Resource } from "sst";
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3"; // ES Modules import
 
+import { trace } from '@opentelemetry/api'
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -125,22 +127,32 @@ const streamToString = (stream) => new Promise((resolve, reject) => {
   stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
 });
 
-export async function getServerSideProps() {
-  console.log("getServerSideProps");
-  console.log("environment");
-  console.dir(process.env);
+const getS3Contents = async () => {
   console.log(Resource.MyBucket.name);
-
   const input = {
     "Bucket": Resource.MyBucket.name,
     "Key": "collector.yaml"
   };
   const command = new GetObjectCommand(input);
-  const response = await new S3Client({}).send(command);
+  return await trace
+    .getTracer('nextjs-example')
+    .startActiveSpan('fetchImportantFileFromS3', async (span) => {
+      span.setAttribute('user', "Jason");
+      try {
+        const response = await new S3Client({}).send(command);
+        const { Body } = response;
+        return await streamToString(Body);
+      } finally {
+        span.end()
+      }
+    })
+}
+export async function getServerSideProps() {
+  console.log("getServerSideProps");
+  console.log("environment");
+  console.dir(process.env);
   // read the body of the response and log it to the console
-  const { Body } = response;
-
-  console.log(await streamToString(Body));
+  console.log(await getS3Contents());
 
   return {
     props: {},
