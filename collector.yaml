@@ -1,20 +1,24 @@
-#collector.yaml in the root directory
-#Set an environment variable 'OPENTELEMETRY_COLLECTOR_CONFIG_FILE' to '/var/task/collector.yaml'
-
 receivers:
   otlp:
     protocols:
       grpc:
+        endpoint: "localhost:4317"
       http:
+        endpoint: "localhost:4318"
 
 exporters:
-  logging:
-    loglevel: debug
-  # awsxray:
+  awsxray:
+    indexed_attributes: ["user", "next.span_name"]
+  debug:
 
-#enables output for traces to xray
 service:
   pipelines:
     traces:
       receivers: [otlp]
-      exporters: [logging]
+      exporters: [awsxray, debug]
+    metrics:
+      receivers: [otlp]
+      exporters: [debug]
+  telemetry:
+    metrics:
+      address: localhost:8888
