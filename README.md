@@ -1,4 +1,4 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+This is an SST/Next.js project configured with OpenTelemetry to send traces to X-Ray
 
 ## Getting Started
 
