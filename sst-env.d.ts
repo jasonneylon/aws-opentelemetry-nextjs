@@ -5,18 +5,6 @@
 
 declare module "sst" {
   export interface Resource {
-    "MyBucket": {
-      "name": string
-      "type": "sst.aws.Bucket"
-    }
-    "MyFunction": {
-      "name": string
-      "type": "sst.aws.Function"
-    }
-    "MyWeb": {
-      "type": "sst.aws.Nextjs"
-      "url": string
-    }
   }
 }
 /// <reference path="sst-env.d.ts" />
