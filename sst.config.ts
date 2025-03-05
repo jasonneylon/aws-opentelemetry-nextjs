@@ -43,7 +43,7 @@ export default $config({
       environment: {
         AWS_LAMBDA_EXEC_WRAPPER: "/opt/otel-handler",
         OPENTELEMETRY_COLLECTOR_CONFIG_URI: $interpolate`s3://${bucket.name}.s3.eu-west-1.amazonaws.com/collector.yaml`,
-          OPENTELEMETRY_EXTENSION_LOG_LEVEL: "debug",
+        OPENTELEMETRY_EXTENSION_LOG_LEVEL: "debug",
         NEXT_OTEL_VERBOSE: "1"
       },
       link: [bucket],
@@ -59,15 +59,6 @@ export default $config({
       server: {
         layers: ["arn:aws:lambda:eu-west-1:901920570463:layer:aws-otel-nodejs-amd64-ver-1-30-1:1"]
       },
-      // This didn't work and I had to set it manually
-      // transform: {
-      //   server: (args, opts) => {
-      //     console.dir(args);
-      //     args.tracingConfig = {
-      //       mode: "Active"
-      //     };
-      //   },
-      // },
       warm: false
     });
   },
